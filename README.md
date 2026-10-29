@@ -19,6 +19,7 @@ Otwarty projekt odczytu SATEL PERFECTA 16-WRL 1.05, integracji SUPLA i aplikacji
 2. [Konfiguracja ESP, SUPLA i telefonu](docs/URUCHOMIENIE.txt).
 3. [Pełny README.txt](README.txt) — kompilacja i zasady zmian ustawień.
 4. [API](docs/API.txt), [testy](docs/WERYFIKACJA.txt), [przygotowany post na forum](docs/POST_FORUM_SUPLA.txt).
+5. [Post gotowy do wklejenia w phpBB — BBCode](docs/POST_FORUM_PHPBB.txt).
 
 Konfiguracja jest lokalna. Repozytorium nie zawiera danych instalacji.
 Sterowanie, zapis przypisań i most są domyślnie wyłączone. Pierwsze uruchomienie służy odczytowi.

@@ -1,0 +1,134 @@
+[size=150][b]SATEL PERFECTA 16-WRL + SUPLA na ESP32 — odczyt, sterowanie, PUSH i Android[/b][/size]
+
+Cześć,
+
+udostępniam projekt integracji centrali [b]SATEL PERFECTA 16-WRL[/b] z SUPLA przez ESP32. Projekt obejmuje odczyt centrali, sterowanie przez przekaźniki, stronę WWW i aplikację [b]Perfecta LAN Community[/b] na Androida.
+
+[url=https://github.com/tijoto/supla-perfecta-bridge]Kod źródłowy i dokumentacja na GitHub[/url]
+[url=https://github.com/tijoto/supla-perfecta-bridge/blob/main/README.txt]Pełna instrukcja README.txt[/url]
+[url=https://github.com/tijoto/supla-perfecta-bridge/releases/latest]APK i archiwum projektu[/url]
+
+[b]1. Co potrafi projekt?[/b]
+[list]
+[*]Odczyt rzeczywistego czuwania i alarmu stref 1 i 2.
+[*]Podgląd wejść, nazw czujek, naruszeń, komunikatów słabej baterii i RF.
+[*]Daty ostatnich naruszeń i komunikatów baterii zaobserwowanych przez program.
+[*]13 kanałów SUPLA: czuwanie S1/S2, alarm S1/S2, wejścia 9–16 i jeden Alarm ON/OFF.
+[*]PUSH o alarmie, zmianie czuwania, naruszeniu i słabej baterii.
+[*]Osobne ustawienia PUSH dla czujek i zdarzeń: zawsze, dzień, noc, harmonogram tygodniowy.
+[*]Android: odczyt i sterowanie przez LAN lub SUPLA oraz głośny, zapętlony alarm telefonu w tle.
+[*]Most TCP dla PERFECTA Soft, lokalna zmiana przypisań S1/S2 i aktualizacja OTA.
+[/list]
+
+[b]Odczyt odbywa się przez RS-232 (TTL). Uzbrajanie i rozbrajanie realizują dwa przekaźniki podłączone do wejść centrali.[/b] Projekt nie wysyła komendy uzbrajania bezpośrednio przez UART.
+
+[b]2. Sprzęt i zakres sprawdzenia[/b]
+
+Kod bazowy był sprawdzany z [b]PERFECTA 16-WRL, firmware 1.05, klasycznym ESP32 z 4 MB Flash i Androidem[/b]. Do sterowania potrzebne są dwa wolne wejścia centrali oraz moduł przekaźników aktywny LOW, zgodny z logiką 3,3 V.
+
+W repozytorium są osobne moduły komunikacji z PERFECTĄ, integracji SUPLA i aplikacji Android. Jest też opis wykonanych testów. Nie deklaruję obsługi innych modeli central.
+
+[b]3. Połączenie UART[/b]
+
+Zaczynamy od kopii konfiguracji w PERFECTA Soft i samego odczytu:
+[code]TX portu TTL centrali -> GPIO16 / RX ESP
+RX portu TTL centrali <- GPIO17 / TX ESP
+GND centrali ---------> GND ESP
+UART: 19200 bit/s, 8N1[/code]
+
+Przed podłączeniem trzeba potwierdzić położenie pinów gniazda i poziomy napięć. Jeśli wymagają dopasowania do 3,3 V, należy je zastosować. [b]Nie podajemy 5 V ani 12 V na GPIO ESP.[/b] Pełny opis jest w dokumentacji okablowania.
+
+[b]4. Konfiguracja i wgranie ESP[/b]
+
+Instalujemy Python, Git i PlatformIO. Z katalogu pobranego projektu uruchamiamy:
+[code]python -m pip install platformio
+python tools/configure.py --interactive[/code]
+
+Generator pyta o własną sieć Wi-Fi, 16-znakowy klucz komunikacji centrali oraz login i hasło strony ESP. Na pierwszą próbę pozostawiamy sterowanie, zapis ustawień i most wyłączone.
+
+[code]pio run -d firmware-esp32
+pio run -d firmware-esp32 -t upload --upload-port PORT_ESP[/code]
+
+PORT_ESP zastępujemy portem swojej płytki. Adres urządzenia odczytujemy w monitorze portu 115200 lub w routerze. Można również otworzyć [url=http://perfecta-esp.local/]http://perfecta-esp.local/[/url], jeśli działa mDNS.
+
+Logujemy się własnymi danymi i sprawdzamy stany obu stref oraz wejść. Sam wzrost RF nie jest potwierdzeniem naruszenia czujki.
+
+[b]5. Dodanie do SUPLA[/b]
+[list=1]
+[*]W Cloud włączamy rejestrację urządzeń.
+[*]W lokalnej konfiguracji włączamy SUPLA i podajemy swój serwer urządzeń, e-mail konta oraz właściwy certyfikat CA. Adres serwera urządzeń i adres strony Cloud mogą być różne.
+[*]Dla prywatnego serwera ustawiamy także poprawną nazwę TLS z certyfikatu. Szczegóły są w instrukcji.
+[*]Ponownie uruchamiamy generator, kompilujemy i wgrywamy firmware.
+[*]W Cloud wybieramy lokalizację urządzenia i własne podpisy kanałów. Po dodaniu urządzenia zamykamy rejestrację.
+[/list]
+
+Generator tworzy indywidualne GUID i AUTHKEY. Zachowujemy je przy aktualizacjach tego samego ESP.
+
+[code]channelNumber 0      — czuwanie strefy 1
+channelNumber 1      — czuwanie strefy 2
+channelNumber 2      — alarm strefy 1
+channelNumber 3      — alarm strefy 2
+channelNumber 4–11   — wejścia 9–16
+channelNumber 12     — Alarm ON/OFF[/code]
+
+To numeracja od zera. Identyfikatory nadane przez serwer będą inne w każdej instalacji.
+
+[b]6. Uzbrajanie i rozbrajanie[/b]
+
+Opisany wariant wykorzystuje:
+[list]
+[*][b]Z7:[/b] obwód NO, reakcja 14 „Zał. czuwanie”, właściwe strefy.
+[*][b]Z8:[/b] obwód NO, reakcja 15 „Wył. czuwanie”, właściwe strefy.
+[/list]
+
+Najpierw sprawdzamy, czy wejścia są wolne. Połączenie przekaźników:
+[code]GPIO25 -> IN1 modułu przekaźników
+GPIO26 -> IN2 modułu przekaźników
+
+Styki NO1 / COM1 -> Z7 / COM centrali
+Styki NO2 / COM2 -> Z8 / COM centrali[/code]
+
+[b]Wejść Z7/Z8 nie łączymy bezpośrednio z GPIO.[/b] Śrubowe COM styków przekaźnika to inny zacisk niż GND elektroniki modułu.
+
+Impuls trwa 300 ms. W spoczynku GPIO mają HIGH, załączenie to LOW. W wykonanej instalacji działało to z czułością wejść 100 ms. Szczegóły zasilania i podciągania pinów są w instrukcji okablowania.
+
+Po sprawdzeniu styków i ustawień włączamy [b]controls.enabled[/b] w lokalnej konfiguracji, ponownie generujemy nagłówki, kompilujemy i wgrywamy program.
+
+Wysłanie impulsu nie oznacza jeszcze skutecznego uzbrojenia. Stan jest później odczytywany z centrali. Przy odmowie sprawdzamy przyczynę na manipulatorze.
+
+[b]7. PUSH i aplikacja Android[/b]
+
+Do PUSH trzeba zezwolić aplikacji SUPLA na powiadomienia, otworzyć ją, aby zarejestrowała token telefonu, i wybrać odbiorców powiadomień urządzenia w Cloud. Następnie na stronie ESP używamy [b]Test PUSH[/b]. Nie uruchamia on przekaźników.
+
+Na podstronie [b]/notifications[/b] ustawiamy osobno reguły dla czujek i zdarzeń. Domyślny dzień to 06:00–22:00; zegar uwzględnia zmianę czasu.
+
+W aplikacji Perfecta LAN Community podajemy własny adres ESP, login i hasło. Na początek wybieramy [b]Tylko LAN[/b]. Pola SUPLA mogą zostać puste.
+
+Włączamy powiadomienia, zgodę na stałą pracę w tle i odpowiednią głośność alarmów Androida. Wykonujemy [b]Test dźwięku[/b]. Przy alarmie strefy aplikacja odtwarza zapętlony sygnał i wibrację do wyciszenia. Potrzebuje działającego połączenia i uprawnień również w tle.
+
+[b]8. Dostęp spoza domu przez SUPLA[/b]
+
+W Cloud tworzymy token dla aplikacji z uprawnieniami:
+[list]
+[*]Urządzenia — Odczyt.
+[*]Kanały — Odczyt i Wykonywanie akcji.
+[/list]
+
+W aplikacji wpisujemy swój adres HTTPS Cloud, numer urządzenia i token. Wybieramy [b]Tylko SUPLA[/b] lub [b]Automatycznie LAN → SUPLA[/b]. Gdy Cloud jest już dostępny z internetu, nie trzeba wystawiać portów ESP na zewnątrz.
+
+Przez SUPLA dostępne są odczyt kanałów, uzbrojenie i rozbrojenie. Zmiany przypisań wejść oraz edytor harmonogramów ESP pozostają lokalne.
+
+[b]9. Kilka istotnych szczegółów[/b]
+[list]
+[*]Opcjonalny zapis przypisań włącza się przez perfecta.configuration_writes. Obie strefy muszą być rozbrojone.
+[*]Checkbox na karcie Strefa 1 zmienia przypisanie S1 wejścia Z7. Przytrzymanie karty czujki otwiera S1, S2 i pole Blokada.
+[*]Blokada jest odczytem. Ustawia się ją manipulatorem. Odznaczenie S1/S2 nie usuwa rejestracji radiowej ani usterki czujki.
+[*]RF nie jest procentem baterii. Odczytywany jest komunikat słabej baterii.
+[*]Historia naruszeń jest historią obserwacji programu. Nie jest pełnym logiem zdarzeń centrali.
+[*]Przez SUPLA aplikacja nie odtwarza źródła alarmu, historii naruszeń ani RF. Pełniejszy podgląd jest lokalny.
+[*]Most PERFECTA Soft korzysta z TCP RAW, port 2217, i jednego uprawnionego komputera. Wymaga własnego wirtualnego portu COM.
+[/list]
+
+Projekt jest udostępniony na [b]GPL-2.0-or-later[/b]. W repozytorium nie ma danych mojej instalacji. Każdy wpisuje własny klucz, sieć i dane SUPLA lokalnie.
+
+Proszę nie dodawać do zgłoszeń kluczy, tokenów, config.local.json, nagłówków private_*, własnych plików BIN ani zrzutów pamięci centrali.
