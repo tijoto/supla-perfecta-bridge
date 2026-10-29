@@ -73,7 +73,7 @@ URUCHOMIENIE — KOLEJNOŚĆ
 -----------------------
 1. Zachowaj kopię ustawień centrali w PERFECTA Soft. Najpierw przygotuj odczyt.
 2. Przeczytaj docs/OKABLOWANIE.txt. Nie łącz wejść Z z GPIO ESP.
-3. Zainstaluj Python 3.10+ i PlatformIO Core:
+3. Zainstaluj Python 3.10+, Git oraz PlatformIO Core:
      python -m pip install platformio
 4. Z katalogu projektu uruchom:
      python tools/configure.py --interactive

@@ -51,7 +51,7 @@ Zapisujemy kopię konfiguracji w PERFECTA Soft. Podłączamy UART i zaczynamy
 od samego odczytu. Sterowanie, zapis przypisań i most są w publicznym wzorze
 domyślnie wyłączone.
 
-Po pobraniu projektu instalujemy Python i PlatformIO:
+Po pobraniu projektu instalujemy Python, Git i PlatformIO:
 
 python -m pip install platformio
 python tools/configure.py --interactive

@@ -4,6 +4,8 @@ Otwarty projekt odczytu SATEL PERFECTA 16-WRL 1.05, integracji SUPLA i aplikacji
 
 **Zacznij od [README.txt](README.txt)** — kompletna instrukcja w języku polskim.
 
+[Pobierz APK i archiwum wydania](https://github.com/tijoto/supla-perfecta-bridge/releases/latest).
+
 | Moduł | Zawartość |
 |---|---|
 | [Komunikacja PERFECTA](komunikacja-perfecta) | UART, ramki, odczyt, most i kontrolowany zapis przypisań |
