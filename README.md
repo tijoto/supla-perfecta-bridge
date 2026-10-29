@@ -27,3 +27,7 @@ Sterowanie, zapis przypisań i most są domyślnie wyłączone. Pierwsze uruchom
 Uzbrajanie i rozbrajanie wykonują dwa przekaźniki. GPIO ESP nie łączy się bezpośrednio z wejściami Z centrali.
 
 Niezależny projekt społecznościowy. Licencja [GPL-2.0-or-later](LICENSE).
+
+## Podgląd aplikacji
+
+<img src="docs/images/perfecta-lan-screen.jpg" alt="Podgląd aplikacji Perfecta LAN" width="320">

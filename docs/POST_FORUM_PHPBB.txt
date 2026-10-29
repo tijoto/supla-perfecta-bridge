@@ -8,6 +8,9 @@ udostępniam projekt integracji centrali [b]SATEL PERFECTA 16-WRL[/b] z SUPLA pr
 [url=https://github.com/tijoto/supla-perfecta-bridge/blob/main/README.txt]Pełna instrukcja README.txt[/url]
 [url=https://github.com/tijoto/supla-perfecta-bridge/releases/latest]APK i archiwum projektu[/url]
 
+[b]Podgląd aplikacji[/b]
+[img]https://raw.githubusercontent.com/tijoto/supla-perfecta-bridge/main/docs/images/perfecta-lan-screen.jpg[/img]
+
 [b]1. Co potrafi projekt?[/b]
 [list]
 [*]Odczyt rzeczywistego czuwania i alarmu stref 1 i 2.
