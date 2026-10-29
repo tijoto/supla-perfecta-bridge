@@ -1,0 +1,48 @@
+name: Build and source checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests
+      - run: python tools/audit_public.py
+      - name: Actual UART state machine with fake hardware
+        run: |
+          g++ -std=c++17 -Ikomunikacja-perfecta/tests/host-stubs -Ikomunikacja-perfecta/include komunikacja-perfecta/tests/z7_fast_test.cpp -o /tmp/z7-test
+          /tmp/z7-test
+      - name: PUSH schedule tests
+        run: |
+          g++ -std=c++17 -O2 -Iintegracja-supla/include integracja-supla/tests/push_schedule_test.cpp -o /tmp/schedule-test
+          /tmp/schedule-test
+  firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install platformio
+      - run: python tools/configure.py --ci
+      - run: pio run -d firmware-esp32
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager 'platforms;android-35' 'build-tools;36.0.0'
+      - run: python aplikacja-android/build.py

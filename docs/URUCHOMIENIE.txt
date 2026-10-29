@@ -1,0 +1,108 @@
+URUCHOMIENIE ESP, SUPLA I APLIKACJI
+=================================
+
+A. ESP I ODCZYT
+1. Wykonaj połączenie UART według OKABLOWANIE.txt. Przy pierwszym uruchomieniu
+   przewody styków sterujących pozostaw odłączone.
+2. Uruchom python tools/configure.py --interactive z katalogu projektu.
+3. Podaj swoje Wi-Fi i klucz używany do komunikacji w PERFECTA Soft. Klucz
+   ma 16 znaków. Program traktuje je jako znaki ASCII, nie dekoduje ich jako
+   ośmiobajtowej liczby zapisanej szesnastkowo.
+4. Nadaj własny login i hasło WWW. Pozostaw wyłączone sterowanie i zapis.
+5. Skompiluj i wgraj według README.txt. Nie wgrywaj obrazu zbudowanego --ci.
+6. Otwórz stronę ESP. Sprawdź UART, obie strefy, nazwy wejść i świeżość danych.
+   Zmianę odczytu sprawdź na znanej czujce przy rozbrojonym systemie, w warunkach
+   uzgodnionych z instalatorem. Sam odczyt RF nie zastępuje takiej próby.
+
+B. KONFIGURACJA SUPLA
+1. Przygotuj konto w SUPLA Cloud i włącz rejestrację nowych urządzeń.
+2. Ustal adres serwera URZĄDZEŃ SUPLA i adres strony SUPLA Cloud. To dwie
+   różne role; nie zakładaj, że strona Cloud lub panel proxy jest serwerem urządzeń.
+3. Przygotuj zaufany certyfikat CA dla serwera urządzeń. Dla prywatnego serwera
+   z certyfikatem własnym pobierz go od administratora i potwierdź jego pochodzenie.
+   Dla serwera publicznego użyj właściwego CA jego łańcucha. Plik musi być PEM.
+   Nie kopiuj klucza prywatnego TLS. Przeglądarka Cloud może używać innego certyfikatu.
+4. W config.local.json ustaw supla.enabled=true, server, email i ca_file.
+   server to sam host, bez https://, ścieżki i portu. Port wpisuje się osobno.
+   tls_server_name to nazwa z certyfikatu, standardowo taka sama jak server.
+   Dla serwera prywatnego łączonego przez adres liczbowy może wymagać innej nazwy.
+   Opcjonalne certificate_sha256 dodaje sprawdzenie odcisku certyfikatu serwera;
+   nie wyłącza sprawdzania CA ani nazwy. Zmiana certyfikatu wymaga zmiany tego pinu.
+5. Uruchom python tools/configure.py. Generator zachowa lub utworzy GUID i AUTHKEY.
+   To tożsamość tego ESP. Nie zmieniaj jej przy zwykłych aktualizacjach.
+6. Skompiluj i wgraj. Zegar musi być prawidłowy dla weryfikacji certyfikatów.
+7. W SUPLA Cloud znajdź urządzenie PERFECTA 16-WRL ESP. Ustaw lokalizację
+   i ewentualnie własne podpisy kanałów. Zamknij rejestrację po dodaniu urządzenia.
+
+Kanał firmware / typ / znaczenie:
+  0 / czuwanie alarmu / strefa 1
+  1 / czuwanie alarmu / strefa 2
+  2 / czujnik binarny / alarm strefy 1
+  3 / czujnik binarny / alarm strefy 2
+  4..11 / czujnik ruchu / wejścia 9..16, po kolei
+  12 / przełącznik zasilania / Alarm ON/OFF, jeden kanał
+
+Cloud może pokazywać numery porządkowe od 1; API channelNumber liczy od 0.
+Identyfikatory kanałów nadane przez serwer są indywidualne. Nie wpisuj numerów
+z cudzej instalacji. Aplikacja znajduje kanały po urządzeniu i channelNumber.
+Kanał alarmu jest czujnikiem binarnym (funkcja 1020), nie nieobsługiwaną
+funkcją 160. Właściwa funkcja jest ustawiona w źródłach wydania Community.
+
+C. PUSH NA TELEFON
+1. W aplikacji SUPLA na Androidzie zezwól na powiadomienia systemowe.
+2. Otwórz aplikację i poczekaj, aż połączy się z kontem. Telefon musi
+   zarejestrować token PUSH na serwerze.
+3. W Cloud w powiadomieniach urządzenia wybierz odbiorców — identyfikator
+   dostępu używany przez telefon. Zapisz. Numer smartfona i numer lokalizacji
+   nie są identyfikatorem dostępu.
+4. Na stronie ESP użyj Test PUSH. Ten przycisk nie steruje przekaźnikami.
+5. W /notifications wybierz zdarzenia oraz tryb dla każdego z nich: zawsze,
+   dzień, noc albo harmonogram tygodniowy. Domyślny dzień: 06:00–22:00.
+   Zegar używa strefy Europe/Warsaw z uwzględnieniem zmiany czasu.
+6. Brak powiadomienia sprawdzaj kolejno: zgoda Androida, połączenie aplikacji,
+   token telefonu na serwerze, odbiorcy, reguła i zegar urządzenia.
+
+D. STEROWANIE
+1. Ustaw Z7/Z8 i podłącz przekaźniki według OKABLOWANIE.txt.
+2. W config.local.json ustaw controls.enabled=true, uruchom generator,
+   skompiluj i wgraj. Po restarcie oba wyjścia mają stan spoczynkowy.
+3. Alarm ON/OFF wysyła odpowiedni impuls. Późniejszy status z centrali
+   potwierdza wynik. Przekaźnik jest blokowany podczas mostu i operacji zapisu.
+4. Gdy centrala odmówi uzbrojenia, sprawdź przyczynę na manipulatorze.
+   Program nie wymusza pominięcia kontroli gotowości ani usunięcia usterek.
+
+E. ANDROID — LAN
+1. Zainstaluj APK Community. Otwórz Połączenie, wybierz Tylko LAN.
+2. Wpisz adres ESP, login i hasło WWW. Dane SUPLA mogą pozostać puste.
+3. Zezwól na powiadomienia Perfecta LAN Community. W Alarm telefonu
+   zezwól na stałą pracę w tle; ustaw słyszalną głośność alarmów Androida.
+4. Wykonaj Test dźwięku. Zapętlony dźwięk alarmowy korzysta ze strumienia
+   alarmów Androida. Nie jest tym samym co krótki dźwięk powiadomienia PUSH.
+   Wycisza się go w aplikacji lub powiadomieniu. Ustawienia Androida, tryb
+   Nie przeszkadzać i zasięg sieci wpływają na skuteczne monitorowanie.
+
+F. ANDROID — INTERNET PRZEZ SUPLA
+1. W Cloud wygeneruj osobisty token dla aplikacji: Urządzenia — Odczyt;
+   Kanały — Odczyt i Wykonywanie akcji. Program nie potrzebuje Modyfikacji
+   kanałów ani zapisu ustawień przez Cloud.
+2. Odczytaj numer swojego urządzenia ESP z Cloud.
+3. W Połączenie wpisz własny adres HTTPS Cloud, numer urządzenia i token.
+4. Wybierz Automatycznie LAN → SUPLA albo Tylko SUPLA. Hasło ESP i token
+   są przechowywane w Android Keystore z szyfrowaniem AES-GCM.
+5. Aplikacja przez SUPLA odczytuje kanały i wykonuje TURN_ON/TURN_OFF.
+   Nie wystawia mostu UART ani strony ESP do internetu. Nie wymaga nowego
+   przekierowania portów do ESP, gdy Twój SUPLA Cloud jest już osiągalny z internetu.
+6. Przez SUPLA nie zmienisz przypisań wejść. Te opcje pozostają w LAN.
+
+G. PERFECTA SOFT PRZEZ MOST
+1. Włącz bridge.enabled i podaj adres swojego komputera w allowed_client_ipv4.
+2. Uruchom generator, skompiluj i wgraj.
+3. W swoim programie wirtualnego COM ustaw surowe połączenie TCP do ESP,
+   port 2217. To TCP RAW, bez negocjacji Telnet/RFC2217.
+4. W PERFECTA Soft wybierz utworzony przez siebie numer COM. UART: 19200/8N1.
+5. Most obsługuje jednego klienta. W tym czasie odczyt niezależny nie wysyła
+   zapytań, a program podgląda przechodzące odpowiedzi. Po rozłączeniu Softa
+   wraca własny czytnik. SUPLA nie wykonuje wtedy poleceń sterujących.
+6. Ten projekt nie instaluje sterownika wirtualnego COM i nie przypisuje
+   numeru COM na stałe. Połączenia i rozłączenia sesji mogą wyzwalać SMS
+   zgodnie z konfiguracją powiadomień samej centrali.

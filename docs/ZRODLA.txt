@@ -1,0 +1,23 @@
+OFICJALNE MATERIAŁY
+==================
+
+SATEL PERFECTA 16-WRL — strona urządzenia, instrukcje, port RS-232 (TTL):
+https://www.satel.pl/produkty/sswin/perfecta/plyty-glowne-perfecta/perfecta-16-wrl/
+Dobierz instrukcję instalatora/programowania do wersji swojej centrali.
+
+SUPLA Device SDK i licencja:
+https://github.com/SUPLA/supla-device/tree/v26.9.2
+https://github.com/SUPLA/supla-device/blob/v26.9.2/LICENSE
+
+SUPLA REST API — akcje kanałów:
+https://github.com/SUPLA/supla-cloud/wiki/Channel-Actions
+
+Espressif — parametry elektryczne i dopuszczalne napięcia GPIO:
+https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf
+https://docs.espressif.com/projects/esp-faq/en/latest/esp-faq-en-master.pdf
+
+PlatformIO — zależności projektu:
+https://docs.platformio.org/en/latest/projectconf/sections/env/options/library/lib_deps.html
+
+Protokół UART w tym repozytorium jest implementacją odtworzoną i sprawdzaną
+w opisanym zakresie urządzenia. Nie jest oficjalnym SDK integracyjnym SATEL.

@@ -1,0 +1,10 @@
+{
+  "name": "PerfectaSuplaIntegration",
+  "version": "1.0.0",
+  "description": "SUPLA channel mapping, explicit relay commands and per-event PUSH schedules",
+  "license": "GPL-2.0-or-later",
+  "frameworks": ["arduino"],
+  "platforms": ["espressif32"],
+  "dependencies": [{"name":"WiFi"},{"name":"WebServer"},{"name":"Preferences"},{"name":"WiFiClientSecure"},{"name":"SuplaDevice"}],
+  "build": {"libArchive": false}
+}

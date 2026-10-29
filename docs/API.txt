@@ -1,0 +1,40 @@
+API LOKALNE ESP
+===============
+Adres bazowy wybiera użytkownik. HTTP Digest/Basic obsługiwane przez bibliotekę
+ESP WebServer. LAN korzysta z HTTP; nie publikuj portu WWW ani mostu w internecie.
+Mutacje wymagają nagłówka X-Perfecta-Token pobranego z /api/session. Jeżeli
+przesyłasz Origin, musi odpowiadać originowi strony ESP. Nie loguj tego tokenu.
+
+GET /api/state               — status, strefy, wejścia, RF, historia obserwacji
+GET /api/session             — token bieżącej sesji ESP
+GET /api/supla               — połączenie SUPLA, liczniki, harmonogramy
+POST /api/control            — action=arm albo disarm; wymaga controls.enabled
+POST /api/supla/test-push     — próba PUSH, bez impulsu sterującego
+POST /api/supla/push          — flags, starsza maska wyboru kategorii
+POST /api/supla/push-schedule — day_start, day_end, rules; format w kodzie WWW
+
+POST /api/input7/partition1 — enabled=0/1 i revision z /api/state
+POST /api/inputs/partitions — number, partition1=0/1, partition2=0/1, revision
+  Wymagają perfecta.configuration_writes=true. Pole blocked jest odrzucane.
+  To przypisania do stref; nie polecenie blokady użytkownika.
+
+POST /api/input7/prepare — revision; opcjonalnie scope=full lub scope=z7
+  Odczyt i trwała kopia bez BEGIN/PATCH/COMMIT. Domyślnie cała konfiguracja.
+  scope=z7 sprawdza szybką ścieżkę dwóch bloków i nie zastępuje pełnego backupu.
+GET /api/input7/backup — istniejąca pełna kopia 7168 B z NVS; nie musi być
+  najnowszym stanem centrali. Nowy pełny prepare odświeża ją. Szybki zapis Z7
+  ma własną kopię bloków i jej nie nadpisuje.
+
+POST /update — multipart firmware; autoryzowane OTA. Do automatycznej
+  aktualizacji użyj tools/ota.py, który dodatkowo wymaga rozbrojonych stref.
+
+Statusy operacji: checking, backup, writing, verifying, recovering oraz wyniki
+success, prepared, unchanged, conflict, error, not_applied, uncertain.
+busy informuje o pracy, id identyfikuje operację. total_bytes i read_bytes
+dotyczą aktualnego etapu; duration_ms podaje czas całej operacji.
+Nie ponawiaj automatycznie polecenia po wyniku uncertain lub utracie odpowiedzi.
+
+Odczyt statusu UART ma priorytet, zwykle do kilku razy na sekundę. WWW i
+Android odświeżają widok mniej więcej raz na sekundę. Diagnostyka/RF co 5 s,
+podgląd przypisań Z7 co 2 s, pozostałe wybrane parametry co 30 s. To harmonogram
+zapytań, nie gwarancja czasu odpowiedzi przy zajętym porcie lub utracie sieci.

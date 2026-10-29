@@ -1,0 +1,17 @@
+<resources>
+    <item name="server" type="id"/><item name="username" type="id"/><item name="password" type="id"/>
+    <item name="save_connection" type="id"/><item name="connection_settings" type="id"/>
+    <item name="connection_mode" type="id"/><item name="supla_server" type="id"/><item name="supla_device" type="id"/><item name="supla_token" type="id"/>
+    <item name="online_status" type="id"/><item name="zone1_status" type="id"/><item name="zone2_status" type="id"/>
+    <item name="arm_button" type="id"/><item name="disarm_button" type="id"/>
+    <item name="notifications_button" type="id"/><item name="command_status" type="id"/>
+    <item name="monitor_enabled" type="id"/><item name="monitor_status" type="id"/>
+    <item name="test_sound" type="id"/><item name="silence_alarm" type="id"/>
+    <item name="battery_optimization" type="id"/><item name="notification_permission" type="id"/>
+    <item name="z7_partition1" type="id"/><item name="z7_status" type="id"/>
+    <item name="sensor_partition1" type="id"/><item name="sensor_partition2" type="id"/><item name="sensor_blocked" type="id"/><item name="save_sensor" type="id"/>
+    <item name="input_card_1" type="id"/><item name="input_card_2" type="id"/><item name="input_card_3" type="id"/><item name="input_card_4" type="id"/>
+    <item name="input_card_5" type="id"/><item name="input_card_6" type="id"/><item name="input_card_7" type="id"/><item name="input_card_8" type="id"/>
+    <item name="input_card_9" type="id"/><item name="input_card_10" type="id"/><item name="input_card_11" type="id"/><item name="input_card_12" type="id"/>
+    <item name="input_card_13" type="id"/><item name="input_card_14" type="id"/><item name="input_card_15" type="id"/><item name="input_card_16" type="id"/>
+</resources>

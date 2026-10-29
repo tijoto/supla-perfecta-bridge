@@ -1,0 +1,28 @@
+# Dane konkretnej instalacji i lokalne certyfikaty
+config.local.json
+**/private_config.h
+**/private_supla.h
+!**/host-stubs/private_config.h
+*.pem
+*.crt
+*.key
+*.p12
+*.jks
+*.keystore
+.env
+.env.*
+# Wyniki kompilacji, podpisywanie i kopie urządzeń
+**/.pio/
+**/build/
+**/.signing/
+**/release/
+*.bin
+*.elf
+*.apk
+*.zip
+*.jsonl
+*.log
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/

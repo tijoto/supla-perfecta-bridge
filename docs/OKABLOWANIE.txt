@@ -1,0 +1,62 @@
+POŁĄCZENIA — KLASYCZNY ESP32, PERFECTA 16-WRL
+===========================================
+
+1. Zasilanie
+ESP zasil stabilnym napięciem 5 V przez USB lub pin wskazany przez producenta
+płytki. Moduł przekaźników zasil zgodnie z jego oznaczeniem. Nie podawaj
+napięcia AUX/12 V centrali na GPIO, pin 3V3 ani zasilanie 5 V ESP.
+
+2. Port komunikacji
+Używany jest port RS-232 (TTL) centrali, 19200 bit/s, 8N1:
+
+   TX portu TTL centrali -- dopasowanie poziomów, jeśli potrzebne --> GPIO16 / RX ESP
+   RX portu TTL centrali <-- dopasowanie poziomów, jeśli potrzebne -- GPIO17 / TX ESP
+   GND portu centrali -------------------------------------------- GND ESP
+
+Nazwy TX/RX odnoszą się do urządzenia, na którym są opisane. Rozmieszczenie
+pinów w fizycznym gnieździe potwierdź w instrukcji swojej centrali i dla
+właściwego kierunku patrzenia na złącze. Ten opis nie numeruje gniazda.
+Nie łącz jednocześnie dwóch nadajników UART do RX centrali.
+
+TTL nie określa automatycznie napięcia 3,3 V. Przed połączeniem zmierz poziomy.
+GPIO ESP32 nie są wejściami 5 V; dla wyższych poziomów zastosuj odpowiednie
+dopasowanie. Klasyczne RS-232 z napięciami dodatnimi i ujemnymi wymaga innego
+interfejsu. USB kabla SATEL pozostaje interfejsem do komputera; ta wersja
+firmware ESP nie obsługuje kabla USB SATEL jako host USB.
+
+3. Sterowanie — styki przekaźników
+Wersja sprzętowa używa przekaźników aktywnych LOW:
+
+   GPIO25 ESP -> IN1 elektroniki modułu przekaźników
+   GPIO26 ESP -> IN2 elektroniki modułu przekaźników
+   GND ESP    -> GND logiki modułu, zgodnie z jego schematem
+
+   Śrubowy COM1 przekaźnika -> COM centrali
+   Śrubowy NO1 przekaźnika  -> Z7 centrali (załączenie czuwania)
+   Śrubowy COM2 przekaźnika -> COM centrali
+   Śrubowy NO2 przekaźnika  -> Z8 centrali (wyłączenie czuwania)
+
+Śrubowy COM styków i GND elektroniki modułu to różne zaciski. W tym połączeniu
+centrala jest sterowana bezpotencjałowym zwarciem Z7/COM lub Z8/COM.
+Nie łącz Z7/Z8 z pinami GPIO. Nie używaj styków NC w opisanej konfiguracji NO.
+
+Impuls trwa 300 ms. W spoczynku GPIO25/26 mają stan HIGH; załączenie to LOW.
+Do fazy startu ESP zastosuj zewnętrzne podciąganie do 3V3, po 10 kOhm na pin.
+Nie podawaj 5 V z modułu przekaźników na GPIO ESP. Sprawdź, czy wejścia
+modułu są zgodne z logiką 3,3 V i czy nie wymagają dodatkowego stopnia sterującego.
+
+4. Przygotowanie centrali
+Opisany wariant wymaga wolnych Z7/Z8. Zachowaj kopię ustawień i sprawdź,
+czy te numery nie obsługują już urządzeń. Ustaw w PERFECTA Soft:
+
+   Z7: obwód NO, reakcja 14 „Zał. czuwanie”, właściwe strefy S1/S2.
+   Z8: obwód NO, reakcja 15 „Wył. czuwanie”, właściwe strefy S1/S2.
+
+Czas impulsu musi przekraczać ustawioną czułość wejścia; w wykonanej
+instalacji działała czułość 100 ms i impuls 300 ms. Dopasuj własne ustawienia
+świadomie. Najpierw sprawdź styki przy odłączonych przewodach Z7/Z8.
+Sterowanie controls.enabled włącz po sprawdzeniu połączeń i konfiguracji.
+
+Polecenie nie oznacza skutecznego uzbrojenia. O wyniku świadczy późniejszy
+odczyt rzeczywistego stanu. Przy odmowie sprawdź manipulator: naruszenia,
+sabotaże, brak urządzeń, baterie i pozostałe usterki.

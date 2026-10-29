@@ -1,0 +1,36 @@
+WERYFIKACJA WYDANIA COMMUNITY 1.0.0 — 2026-10-29
+==============================================
+
+WYKONANE DLA TEGO WYDANIA
+1. Kompilacja firmware ESP32 na syntetycznej konfiguracji, wszystkie moduły
+   dołączone do programu. PlatformIO espressif32 6.8.1, SDK SUPLA v26.9.2
+   z przypiętego commitu i odtwarzalnymi poprawkami zgodności Arduino 2.x.
+   Użycie statycznej RAM: 74792 B; Flash programu: 1148789 B.
+   BUILD_TEST_ONLY blokuje uruchomienie sieci i UART w obrazie testowym.
+2. 92 sprawdzenia rzeczywistego monitor.cpp z atrapami UART i NVS:
+   zmiana i zachowanie pozostałych bajtów, konflikty, uszkodzona kopia,
+   utrata potwierdzenia, odczyt po restarcie, stary format dziennika,
+   pełna ścieżka edycji czujek i domyślnie wyłączony zapis w wersji publicznej.
+3. 7731104 sprawdzenia reguł tygodniowych PUSH, również przez północ.
+4. 9 testów konfiguratora: puste dane, kontrola formatu, blokady domyślne,
+   generowanie i zachowanie tożsamości oraz kontrola źródeł publikacji.
+5. Kompilacja i weryfikacja podpisu APK Community.
+6. 589 testów polityki/transportu LAN i 18 testów transportu Cloud aplikacji.
+7. Kontrola źródeł i rozpakowanej zawartości APK względem znanych wartości
+   prywatnej instalacji. Żadnej z kontrolowanych wartości nie znaleziono.
+
+Firmware testowego nie dołączamy jako pliku do wgrania. Własny firmware
+użytkownik buduje po podaniu własnej konfiguracji, bez --ci.
+
+ZAKRES POTWIERDZENIA SPRZĘTOWEGO
+Kod bazowy był używany z PERFECTA 16-WRL 1.05, klasycznym ESP32 4 MB,
+przekaźnikami LOW 300 ms i aplikacją Android. Odczyt alarmów obu stref,
+źródła alarmu, komunikacji, sterowania oraz PUSH był sprawdzany podczas
+rozwijania tej instalacji. Opis tej publikacji jest ograniczony do tego zakresu.
+
+Testy wydania publicznego wykonano na konfiguracji syntetycznej. Nie są
+potwierdzeniem poprawności okablowania ani ustawień nowej instalacji.
+Nowy użytkownik powinien najpierw sprawdzić odczyt i konfigurację własnej centrali,
+a następnie przekaźniki i dopiero sterowanie czuwaniem.
+
+Zanonimizowany raport: verification.json w katalogu głównym.

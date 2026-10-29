@@ -1,0 +1,33 @@
+PUBLIKACJA I WKŁAD W PROJEKT
+==========================
+
+W Git publikuj źródła i pusty config.example.json. Dane instalacji wpisuj
+wyłącznie do config.local.json albo interaktywnego generatora. Nagłówki
+private_config.h i private_supla.h są generowane lokalnie i ignorowane.
+Nigdy nie wykonuj git add -f dla tych plików.
+
+Przed commitowaniem:
+  python -m unittest discover -s tests
+  python tools/audit_public.py
+  git status --short
+  git diff --cached
+
+Automatyczna kontrola wykrywa typowe tokeny, klucze prywatne, certyfikaty,
+adresy domowej sieci i część lokalnych ścieżek. Nie zastępuje przejrzenia diffu.
+Nie wklejaj do issues nagłówków Authorization, tokenów, zrzutów Flash/NVS,
+konfiguracji centrali, jej identyfikatorów ani zapisów UART z realnej instalacji.
+Testy protokołu mają dane syntetyczne, niezwiązane z kluczem urządzenia.
+
+APK Community można dołączyć do wydania po sprawdzeniu zgodności ze źródłami.
+Do kolejnych wydań używaj tego samego prywatnego klucza podpisywania APK.
+Nie dołączaj .signing. Własny BIN ESP zawiera dane instalacji i nie jest
+uniwersalnym plikiem do pobrania dla innych użytkowników.
+
+Zmiana numeracji kanałów wymaga migracji w SUPLA. Zmiana GUID lub AUTHKEY
+tworzy konflikt tożsamości/rejestracji urządzenia; nie rób jej przy aktualizacji.
+Poprawki protokołu powinny zachowywać walidację modelu, CRC, identyfikację
+odpowiedzi i zasadę braku automatycznego powtarzania komend zapisu.
+
+W zgłoszeniu błędu podaj model, firmware centrali, wersję ESP/Androida i opis
+obserwacji. Usuń dane prywatne. Działanie na innej centrali wymaga odrębnego
+sprawdzenia; obecne wydanie deklaruje wyłącznie PERFECTA 16-WRL 1.05.

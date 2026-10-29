@@ -1,0 +1,10 @@
+{
+  "name": "PerfectaCommunication",
+  "version": "1.0.0",
+  "description": "PERFECTA 16-WRL 1.05 UART reader, exclusive bridge and guarded assignment writes",
+  "license": "GPL-2.0-or-later",
+  "frameworks": ["arduino"],
+  "platforms": ["espressif32"],
+  "dependencies": [{"name":"WiFi"},{"name":"WebServer"},{"name":"Preferences"}],
+  "build": {"libArchive": false}
+}

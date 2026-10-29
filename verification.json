@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "date": "2026-10-29",
+  "firmware_build": {
+    "passed": true,
+    "board": "esp32dev",
+    "platform": "espressif32@6.8.1",
+    "supla_sdk_commit": "459fc92ae9803286cc14113ba96f582fab8a9dee",
+    "all_modules_linked": true,
+    "configuration": "synthetic BUILD_TEST_ONLY",
+    "static_ram_bytes": 74792,
+    "program_flash_bytes": 1148789
+  },
+  "tests": {
+    "uart_state_machine_checks": 92,
+    "push_schedule_checks": 7731104,
+    "configuration_tests": 9,
+    "android_lan_host_checks": 589,
+    "android_cloud_host_checks": 18
+  },
+  "android": {
+    "package": "org.suplaforum.perfectalan",
+    "version": "1.0.0",
+    "build_passed": true,
+    "signature_verified": true,
+    "apk_sha256": "f98925afa2d40b45925cbfb6e852fd662a79c7f70142c542564c53804c686339"
+  },
+  "privacy": {
+    "source_and_apk_known_value_scan_passed": true,
+    "installation_values_included": false,
+    "installation_firmware_or_dumps_included": false,
+    "signing_private_key_included": false
+  },
+  "community_release_flashed_to_alarm_hardware": false
+}

@@ -1,0 +1,25 @@
+LICENCJE I POCHODZENIE
+=====================
+
+Kod tej publikacji udostępniany jest na GPL-2.0-or-later (LICENSE).
+
+SUPLA Device SDK: AC SOFTWARE SP. Z O.O., GPL-2.0-or-later.
+https://github.com/SUPLA/supla-device
+Wersja v26.9.2, commit 459fc92ae9803286cc14113ba96f582fab8a9dee.
+SDK pobiera PlatformIO; repozytorium nie zawiera jego prywatnej kopii.
+tools/sdk_compat.py stosuje dwie poprawki zgodności dla Arduino-ESP32 2.x:
+API PBKDF2 w mbedTLS 2.x oraz sygnatury analogWriteFrequency/Resolution.
+Zachowane są ścieżki upstream dla nowszych wersji tych bibliotek.
+Skrypt dodaje także ścieżkę nagłówka frameworkowej biblioteki EEPROM,
+używanej przez backend SDK; biblioteka jest jawnie wymieniona w lib_deps.
+
+Arduino-ESP32 i biblioteki ESP: odpowiednie licencje projektu upstream.
+https://github.com/espressif/arduino-esp32
+PlatformIO espressif32 6.8.1 przypina używane środowisko budowania.
+
+Android SDK/JDK są narzędziami zewnętrznymi, nie są dołączone do repozytorium.
+Kod aplikacji, syntetyczny sygnał dźwiękowy i zasoby projektu są dostępne
+w katalogu aplikacja-android. build.py generuje sygnał dźwiękowy lokalnie.
+
+Znaki SATEL, PERFECTA i SUPLA należą do ich właścicieli. Projekt nie zawiera
+firmware centrali, kodu PERFECTA Soft, instalatorów SATEL ani kluczy producenta.

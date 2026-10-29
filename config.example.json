@@ -1,0 +1,18 @@
+{
+  "wifi": {"ssid": "", "password": ""},
+  "web": {"username": "admin", "password": ""},
+  "perfecta": {"key": "", "configuration_writes": false},
+  "controls": {"enabled": false},
+  "bridge": {"enabled": false, "allowed_client_ipv4": ""},
+  "supla": {
+    "enabled": false,
+    "server": "",
+    "email": "",
+    "port": 2016,
+    "tls_server_name": "",
+    "ca_file": "",
+    "certificate_sha256": "",
+    "guid": "",
+    "authkey": ""
+  }
+}
